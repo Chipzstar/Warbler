@@ -6,14 +6,16 @@ import AuthForm from "../components/AuthForm";
 import { authUser } from "../store/actions/auth";
 import { removeError } from "../store/actions/errors";
 
-const Main = ({ authUser, errors, removeError }) => {
+const Main = ({ authUser, errors, removeError, currentUser }) => {
     return (
         <div className={"container"}>
             <Switch>
                 <Route
                     exact={true}
                     path='/'
-                    render={props => <Homepage {...props} />}
+                    render={props => (
+                        <Homepage currentUser={currentUser} {...props} />
+                    )}
                 />
                 <Route
                     exact={true}
@@ -41,7 +43,7 @@ const Main = ({ authUser, errors, removeError }) => {
                                 errors={errors}
                                 onAuth={authUser}
                                 signUp
-                                buttonText={"Registration"}
+                                buttonText={"Register"}
                                 heading={"Join Warbler today!"}
                                 {...props}
                             />
