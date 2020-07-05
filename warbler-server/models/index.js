@@ -3,7 +3,7 @@ const mongoose = require('mongoose')
 mongoose.set("debug", true);
 mongoose.Promise = Promise;
 
-mongoose.connect("mongodb://localhost:27017/warbler", {
+mongoose.connect(process.env.MONGODB_URI || "mongodb://localhost:27017/warbler", {
 	keepAlive: true,
 	useCreateIndex: true
 }, () => console.log("Connected to Mongo Database!"))
