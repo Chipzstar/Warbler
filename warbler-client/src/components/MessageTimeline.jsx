@@ -1,15 +1,14 @@
 import React from "react";
-import PropTypes from "prop-types";
 import MessageList from "../containers/MessageList";
+import UserAside from "./UserAside";
 
-const MessageTimeline = props => {
+const MessageTimeline = ({ username, profileImageURL }) => {
     return (
         <div className={"row"}>
+            <UserAside profileImage={profileImageURL} username={username} />
             <MessageList />
         </div>
     );
 };
-
-MessageTimeline.propTypes = {};
 
 export default MessageTimeline;
