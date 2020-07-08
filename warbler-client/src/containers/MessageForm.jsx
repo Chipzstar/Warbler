@@ -1,23 +1,42 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import { createNewMessage } from "../store/actions/messages";
+import { createNewMessage, updateMessage } from "../store/actions/messages";
 
 class MessageForm extends Component {
-    constructor() {
-        super();
+    constructor(props) {
+        super(props);
         this.state = {
             message: "",
         };
     }
+
     handleNewMessage = e => {
         e.preventDefault();
-        this.props.createNewMessage(this.state.message);
-        this.setState({ message: "" });
-        this.props.history.push("/");
+        const { history, location, match, createNewMessage, updateMessage } = this.props;
+        switch (match.params.type) {
+            case "new":
+                createNewMessage(this.state.message)
+                    .then(() => {
+                        this.setState({ message: "" });
+                        history.push("/");
+                    })
+                return
+            case "edit":
+                updateMessage(this.state.message, location.state["userId"], location.state["messageId"])
+                    .then(() => {
+                        this.setState({ message: "" });
+                        history.push("/");
+                    })
+                return
+            default:
+                console.error("Invalid URL parameter!")
+                return
+        }
     };
+
     render() {
         const { message } = this.state;
-        const { errors } = this.props;
+        const { errors, match } = this.props;
         return (
             <div>
                 <form onSubmit={this.handleNewMessage}>
@@ -36,11 +55,12 @@ class MessageForm extends Component {
                             this.setState({ message: e.target.value })
                         }
                     />
+                    <br/><br/>
                     <button
                         type='submit'
                         className='btn btn-success btn-lg pull-right'
                     >
-                        Add my message
+                        {match.params.type === "edit" ? "Update message": "Add my message"}
                     </button>
                 </form>
             </div>
@@ -50,8 +70,8 @@ class MessageForm extends Component {
 
 const mapStateToProps = state => {
     return {
-        errors: state.errors,
+        errors: state.errors
     };
 };
 
-export default connect(mapStateToProps, { createNewMessage })(MessageForm);
+export default connect(mapStateToProps, { createNewMessage, updateMessage })(MessageForm);

@@ -9,8 +9,8 @@ class MessageList extends Component {
         this.state = {};
     }
 
-    componentDidMount() {
-        this.props.fetchMessages();
+    async componentDidMount() {
+        await this.props.fetchMessages();
     }
 
     componentDidUpdate(prevProps, prevState, snapshot) {
@@ -24,13 +24,13 @@ class MessageList extends Component {
             let isAuthor = currentUser.user.id === msg.user["_id"];
             let inputProps = {
                 key: msg["_id"],
+                messageId: msg["_id"],
                 text: msg.text,
                 date: msg["createdAt"],
                 username: msg.user.username,
                 profileImageURL: msg.user.profileImageURL,
-                removeMessage: isAuthor
-                    ? deleteMessage.bind(this, msg.user._id, msg._id)
-                    : null,
+                isAuthor,
+                removeMessage: deleteMessage.bind(this, msg.user["_id"], msg["_id"])
             };
             return <MessageItem {...inputProps} />;
         });

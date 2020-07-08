@@ -83,9 +83,12 @@ ul.nav .navbar-nav li {
     cursor: pointer;
 }
 
+a.btn-primary,
 a.btn.btn-danger,
+a.btn.btn-primary:hover,
 a.btn.btn-danger:hover {
     color: white;
+    margin: 0 5px;
 }
 
 .navbar-header {

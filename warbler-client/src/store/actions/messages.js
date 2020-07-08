@@ -36,6 +36,17 @@ export const createNewMessage = text => {
     };
 };
 
+export const updateMessage = (text, userId, messageId) => {
+    return dispatch => {
+        return apiCall("PUT", `/api/users/${userId}/messages/${messageId}`, { text })
+            .then((res) => console.log("Message Updated", res))
+            .catch(err => {
+                console.error(err);
+                dispatch(addError(err.message));
+            });
+    };
+};
+
 export const deleteMessage = (userId, messageId) => {
     return dispatch => {
         return apiCall("DELETE", `/api/users/${userId}/messages/${messageId}`)

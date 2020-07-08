@@ -53,7 +53,7 @@ const Main = ({ authUser, errors, removeError, currentUser }) => {
                     }}
                 />
                 <Route
-                    path='/users/:id/messages/new'
+                    path='/users/:id/messages/:type'
                     component={withAuth(MessageForm)}
                 />
             </Switch>

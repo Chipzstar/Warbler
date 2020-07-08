@@ -3,14 +3,19 @@ import PropTypes from "prop-types";
 import Moment from "react-moment";
 import { Link } from "react-router-dom";
 import DefaultProfileImg from "../assets/images/default-profile-image.jpg";
+import { useSelector } from "react-redux";
 
 const MessageItem = ({
-    date,
-    profileImageURL,
-    username,
-    text,
-    removeMessage,
-}) => {
+                         messageId,
+                         date,
+                         profileImageURL,
+                         username,
+                         text,
+                         isAuthor,
+                         updateMessage,
+                         removeMessage
+                     }) => {
+    const userId = useSelector(state => state["currentUser"].user.id)
     return (
         <div>
             <li className={"list-group-item"}>
@@ -29,8 +34,25 @@ const MessageItem = ({
                         </Moment>
                     </span>
                     <p>{text}</p>
-                    {removeMessage && (
-                        <a className='btn btn-danger' onClick={removeMessage}>
+                    {isAuthor && (
+                        <Link
+                            to={{
+                                pathname: `/users/${userId}/messages/edit`,
+                                state: {
+                                    userId,
+                                    messageId
+                                }
+                            }}
+                        >
+                            {/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}
+                            <a className='btn btn-primary btn-sm' onClick={updateMessage}>
+                                edit
+                            </a>
+                        </Link>
+                    )}
+                    {isAuthor && (
+                        // eslint-disable-next-line jsx-a11y/anchor-is-valid
+                        <a className='btn btn-danger btn-sm' onClick={removeMessage}>
                             delete
                         </a>
                     )}
@@ -41,11 +63,14 @@ const MessageItem = ({
 };
 
 MessageItem.propTypes = {
+    messageId: PropTypes.string.isRequired,
     date: PropTypes.string.isRequired,
     username: PropTypes.string.isRequired,
     text: PropTypes.string.isRequired,
     profileImageURL: PropTypes.string,
-    removeMessage: PropTypes.func,
+    isAuthor: PropTypes.bool.isRequired,
+    updateMessage: PropTypes.func,
+    removeMessage: PropTypes.func
 };
 
 export default MessageItem;

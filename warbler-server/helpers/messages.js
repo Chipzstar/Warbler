@@ -29,7 +29,6 @@ exports.createMessage = async function (req, res, next) {
 //GET - /api/users/:user_id/messages/:message_id
 exports.getMessage = async function (req, res, next) {
 	let {userId, msgId} = req.params;
-	console.log(req.params)
 	try {
 		let currentUser = await db.User.findById(userId);
 		console.log(currentUser)
@@ -40,6 +39,24 @@ exports.getMessage = async function (req, res, next) {
 		return res.status(200).json({
 			foundMessage
 		})
+	} catch (err) {
+		console.error(err)
+		return next(err);
+	}
+}
+//UPDATE - /api/users/:user_id/messages/:message_id
+exports.updateMessage = async function(req, res, next) {
+	let { userId, msgId } = req.params;
+	let { text } = req.body;
+	try {
+		let currentUser = await db.User.findById(userId);
+		console.log(currentUser);
+		await db.Message.findByIdAndUpdate(msgId, { text }, { new: "true"}, ((err, obj) => {
+			if(err) return next(err)
+			else return res.status(200).json({
+				"Message Updated": obj
+			})
+		}));
 	} catch (err) {
 		console.error(err)
 		return next(err);

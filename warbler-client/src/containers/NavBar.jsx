@@ -30,6 +30,7 @@ class NavBar extends Component {
                                 </Link>
                             </li>
                             <li>
+                                {/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}
                                 <a onClick={this.logout}>Logout</a>
                             </li>
                         </ul>
