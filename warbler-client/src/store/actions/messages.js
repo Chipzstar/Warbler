@@ -15,10 +15,7 @@ export const remove = id => ({
 export const fetchMessages = () => {
     return dispatch => {
         return apiCall("GET", "/api/messages")
-            .then(res => {
-                //console.log(res);
-                dispatch(loadMessages(res));
-            })
+            .then(res => dispatch(loadMessages(res)))
             .catch(err => dispatch(addError(err.message)));
     };
 };
@@ -26,7 +23,7 @@ export const fetchMessages = () => {
 export const createNewMessage = text => {
     return (dispatch, getState) => {
         let { currentUser } = getState();
-        const id = currentUser.user.id;
+        const id = currentUser.user["_id"];
         return apiCall("POST", `/api/users/${id}/messages`, { text })
             .then(res => {})
             .catch(err => {
@@ -38,8 +35,10 @@ export const createNewMessage = text => {
 
 export const updateMessage = (text, userId, messageId) => {
     return dispatch => {
-        return apiCall("PUT", `/api/users/${userId}/messages/${messageId}`, { text })
-            .then((res) => console.log("Message Updated", res))
+        return apiCall("PUT", `/api/users/${userId}/messages/${messageId}`, {
+            text,
+        })
+            .then(res => console.log("Message Updated", res))
             .catch(err => {
                 console.error(err);
                 dispatch(addError(err.message));

@@ -1,23 +1,24 @@
 const db = require("../models/index")
 const jwt = require("jsonwebtoken");
+const path = require('path');
 
 exports.login = async (req, res, next) => {
 	try {
 		let user = await db.User.findOne({
 			email: req.body.email
 		})
-		let {id, username, profileImageURL} = user
+		let {_id, username, profileImageURL} = user
 		let isMatch = await user.comparePassword(req.body.password);
 		if (isMatch) {
 			let token = jwt.sign({
-					id,
+					_id,
 					username,
 					profileImageURL
 				},
 				process.env.SECRET_KEY
 			);
 			return res.status(200).json({
-				id, username, profileImageURL, token,
+				id: _id, username, profileImageURL, token,
 				message: "You have logged in Successfully!"
 			})
 		} else {
@@ -36,10 +37,10 @@ exports.login = async (req, res, next) => {
 }
 
 exports.register = async (req, res, next) => {
+	console.log("req.file:", req.file);
 	try {
 		//create a user
-		console.log(req.body);
-		let user = await db.User.create(req.body)
+		let user = await db.User.create(req.file ? {...req.body, profileImageURL: req.file.path} : {...req.body})
 		let {id, username, profileImageURL} = user
 		//create a jwt token
 		let token = jwt.sign({

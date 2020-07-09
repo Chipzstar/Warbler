@@ -19,7 +19,7 @@ app.get('/api', (req, res) => {
 		message: "Welcome to Warbler"
 	})
 })
-
+app.use('/uploads', express.static('uploads'));
 app.use('/api/auth', authRoutes);
 app.use(
 	"/api/users/:userId/messages",

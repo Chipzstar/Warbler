@@ -6,16 +6,16 @@ import DefaultProfileImg from "../assets/images/default-profile-image.jpg";
 import { useSelector } from "react-redux";
 
 const MessageItem = ({
-                         messageId,
-                         date,
-                         profileImageURL,
-                         username,
-                         text,
-                         isAuthor,
-                         updateMessage,
-                         removeMessage
-                     }) => {
-    const userId = useSelector(state => state["currentUser"].user.id)
+    messageId,
+    date,
+    profileImageURL,
+    username,
+    text,
+    isAuthor,
+    updateMessage,
+    removeMessage,
+}) => {
+    const userId = useSelector(state => state["currentUser"].user["_id"]);
     return (
         <div>
             <li className={"list-group-item"}>
@@ -40,19 +40,24 @@ const MessageItem = ({
                                 pathname: `/users/${userId}/messages/edit`,
                                 state: {
                                     userId,
-                                    messageId
-                                }
+                                    messageId,
+                                },
                             }}
                         >
-                            {/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}
-                            <a className='btn btn-primary btn-sm' onClick={updateMessage}>
+                            <span
+                                className='btn btn-primary btn-sm'
+                                onClick={updateMessage}
+                            >
                                 edit
-                            </a>
+                            </span>
                         </Link>
                     )}
                     {isAuthor && (
                         // eslint-disable-next-line jsx-a11y/anchor-is-valid
-                        <a className='btn btn-danger btn-sm' onClick={removeMessage}>
+                        <a
+                            className='btn btn-danger btn-sm'
+                            onClick={removeMessage}
+                        >
                             delete
                         </a>
                     )}
@@ -70,7 +75,7 @@ MessageItem.propTypes = {
     profileImageURL: PropTypes.string,
     isAuthor: PropTypes.bool.isRequired,
     updateMessage: PropTypes.func,
-    removeMessage: PropTypes.func
+    removeMessage: PropTypes.func,
 };
 
 export default MessageItem;

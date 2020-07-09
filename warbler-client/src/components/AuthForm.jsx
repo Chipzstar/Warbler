@@ -8,22 +8,45 @@ class AuthForm extends Component {
             email: "",
             username: "",
             password: "",
-            profileImageURL: "",
         };
     }
+
+    mapStateToFormData = () => {
+        let form_data = new FormData();
+        Object.keys(this.state).forEach(item => {
+            item !== "profileImageURL"
+                ? form_data.set(item, this.state[item])
+                : form_data.append(
+                      item,
+                      this.state[item],
+                      this.state[item].name
+                  );
+        });
+        return form_data;
+    };
 
     handleSubmit = e => {
         e.preventDefault();
         const authType = this.props.signUp ? "register" : "login";
-        console.log(authType);
+        console.log("AuthType:", authType);
+        const formData = this.mapStateToFormData();
         this.props
-            .onAuth(authType, this.state)
+            .onAuth(authType, formData)
             .then(() => this.props.history.push("/"))
             .catch(err => console.log(err));
     };
 
     handleChange = e => {
         this.setState({ [e.target.name]: e.target.value });
+    };
+
+    handleFileChange = e => {
+        this.setState(
+            {
+                [e.target.name]: e.target.files[0],
+            },
+            () => console.log(this.state.profileImageURL)
+        );
     };
 
     render() {
@@ -38,7 +61,7 @@ class AuthForm extends Component {
 
         history.listen(() => removeError());
 
-        const { email, username, password, profileImageURL } = this.state;
+        const { email, username, password } = this.state;
         return (
             <div>
                 <div className={"row justify-content-md-center text-center"}>
@@ -84,11 +107,10 @@ class AuthForm extends Component {
                                     </label>
                                     <input
                                         className={"form-control"}
-                                        type={"text"}
+                                        type={"file"}
                                         name={"profileImageURL"}
                                         id={"image-url"}
-                                        onChange={this.handleChange}
-                                        value={profileImageURL}
+                                        onChange={this.handleFileChange}
                                     />
                                 </div>
                             )}

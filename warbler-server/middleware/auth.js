@@ -2,17 +2,7 @@ require('dotenv').config();
 const jwt = require('jsonwebtoken');
 const express = require("express");
 
-const testMiddleware = (req, res, next) => {
-	try {
-		console.log("Test middleware has been executed...")
-	    next()
-	} catch (err) {
-	    console.error(err)
-		next(err)
-	}
-}
-
-const authenticateUser = (req, res, next) => {
+const authenticateUser = async (req, res, next) => {
 	try {
 		const token = req.headers.authorization.split(" ")[1]
 		jwt.verify(token, process.env.SECRET_KEY, function(err, decoded) {
@@ -30,11 +20,11 @@ const authenticateUser = (req, res, next) => {
 	}
 };
 
-const authorizeUser = (req, res, next) => {
+const authorizeUser = async (req, res, next) => {
 	try {
 	    const token = req.headers.authorization.split(" ")[1]
 		jwt.verify(token, process.env.SECRET_KEY, function (err, decoded) {
-			return (decoded && decoded["id"] === req.params["userId"] ? next() : next({
+			return (decoded && decoded["_id"] === req.params["userId"] ? next() : next({
 				status: 401,
 				message: "Unauthorized"
 			}));
@@ -49,7 +39,6 @@ const authorizeUser = (req, res, next) => {
 };
 
 module.exports = {
-	testMiddleware,
 	authenticateUser,
 	authorizeUser
 }

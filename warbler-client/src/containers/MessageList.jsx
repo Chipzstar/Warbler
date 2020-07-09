@@ -10,18 +10,19 @@ class MessageList extends Component {
     }
 
     async componentDidMount() {
+        console.log("CurrentUser: ", this.props.currentUser.user);
         await this.props.fetchMessages();
     }
 
     componentDidUpdate(prevProps, prevState, snapshot) {
+        console.log("List of Messages");
         for (let msg of this.props.messages) console.log(msg);
-        console.log(this.props.currentUser.user);
     }
 
     render() {
         const { currentUser, messages, deleteMessage } = this.props;
-        const messageList = messages.map((msg, index) => {
-            let isAuthor = currentUser.user.id === msg.user["_id"];
+        const messageList = messages.map(msg => {
+            let isAuthor = currentUser.user["_id"] === msg.user["_id"];
             let inputProps = {
                 key: msg["_id"],
                 messageId: msg["_id"],
@@ -30,7 +31,11 @@ class MessageList extends Component {
                 username: msg.user.username,
                 profileImageURL: msg.user.profileImageURL,
                 isAuthor,
-                removeMessage: deleteMessage.bind(this, msg.user["_id"], msg["_id"])
+                removeMessage: deleteMessage.bind(
+                    this,
+                    msg.user["_id"],
+                    msg["_id"]
+                ),
             };
             return <MessageItem {...inputProps} />;
         });
